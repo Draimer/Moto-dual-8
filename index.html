@@ -457,29 +457,88 @@
       color: var(--accent);
     }
 
-    /* ───── 手機適配 ───── */
+    /* ───── 平板 (≤1024px) ───── */
+    @media (max-width: 1024px) {
+      .nav-inner { width: min(1480px, calc(100% - 40px)); }
+      .hero-text { max-width: 60vw; left: max(28px, 4vw); }
+      .coverflow-wrap { height: 26vh; }
+    }
+
+    /* ───── 手機 / 直式 (≤768px) ───── */
     @media (max-width: 768px) {
-      .hero-text {
-        max-width: calc(100vw - 80px);
-        top: 14vh;
-        transform: none;
+      html, body {
+        height: auto;
+        min-height: 100vh;
+        min-height: 100dvh;
+        overflow-x: hidden;
+        overflow-y: auto;
       }
 
-      .hero-text h1 {
-        font-size: clamp(48px, 14vw, 80px);
+      .stage {
+        width: 100%;
+        height: auto;
+        min-height: 100vh;
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
       }
+
+      .stage::after { display: none; }
+
+      .nav {
+        position: static;
+        padding: 12px 0;
+      }
+      .nav-inner { width: calc(100% - 32px); gap: 14px; }
+
+      .hero-text {
+        position: static;
+        transform: none;
+        max-width: 100%;
+        margin: 26px 0 0;
+        padding: 0 20px;
+      }
+
+      .hero-text h1 { font-size: clamp(46px, 15vw, 96px); }
+      .hero-sub { font-size: 12px; letter-spacing: 0.3em; }
+      .hero-lead { max-width: 100%; font-size: 15px; }
+      .btn-primary { width: 100%; justify-content: center; }
+      .hero-meta { text-align: left; }
 
       .coverflow-wrap {
-        bottom: 6vh;
-        height: 32vh;
+        position: static;
+        flex: 0 0 auto;
+        height: 230px;
+        margin: 32px 0 52px;
       }
 
-      .cf-card {
-        width: 240px;
-        height: 160px;
-        left: -120px;
-        top: -80px;
+      .scroll-hint {
+        position: static;
+        transform: none;
+        text-align: center;
+        margin: 0 0 22px;
       }
+    }
+
+    /* ───── 小型手機 (≤420px) ───── */
+    @media (max-width: 420px) {
+      .brand-text { font-size: 12px; }
+      .brand-mark { width: 34px; height: 34px; }
+      .nav-cta { padding: 9px 14px; font-size: 12px; }
+      .hero-text h1 { font-size: clamp(42px, 17vw, 72px); }
+      .hero-lead { font-size: 14px; }
+      .coverflow-wrap { height: 200px; }
+    }
+
+    /* ───── 橫式手機 (矮螢幕) ───── */
+    @media (max-height: 520px) and (orientation: landscape) {
+      html, body { height: auto; min-height: 100dvh; overflow-y: auto; }
+      .stage { height: auto; min-height: 100dvh; display: flex; flex-direction: column; }
+      .stage::after { display: none; }
+      .nav { position: static; }
+      .hero-text { position: static; transform: none; margin: 22px 0 0; padding: 0 24px; max-width: 72%; }
+      .coverflow-wrap { position: static; height: 190px; margin: 18px 0 28px; }
+      .scroll-hint { display: none; }
     }
   </style>
 </head>
@@ -706,17 +765,26 @@
       });
 
       var touchStartX = 0;
+      var touchStartY = 0;
       var touchStartPos = 0;
+      var touchAxis = null;
       window.addEventListener('touchstart', function (e) {
         if (e.touches.length === 1) {
           touchStartX = e.touches[0].clientX;
+          touchStartY = e.touches[0].clientY;
           touchStartPos = targetPos;
+          touchAxis = null;
         }
       }, { passive: true });
 
       window.addEventListener('touchmove', function (e) {
-        if (e.touches.length === 1) {
-          var dx = e.touches[0].clientX - touchStartX;
+        if (e.touches.length !== 1) return;
+        var dx = e.touches[0].clientX - touchStartX;
+        var dy = e.touches[0].clientY - touchStartY;
+        if (touchAxis === null && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
+          touchAxis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+        }
+        if (touchAxis === 'x') {
           var delta = -dx / spacing;
           targetPos = Math.max(minPos, Math.min(maxPos, touchStartPos + delta));
           ensureAnimating();
