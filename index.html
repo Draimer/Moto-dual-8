@@ -540,6 +540,89 @@
       .coverflow-wrap { position: static; height: 190px; margin: 18px 0 28px; }
       .scroll-hint { display: none; }
     }
+
+    /* ───── 圖片放大 Lightbox ───── */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 5vw;
+      background: rgba(3, 2, 6, 0.92);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      cursor: zoom-out;
+    }
+
+    .lightbox.open { display: flex; }
+
+    .lightbox-inner {
+      position: relative;
+      max-width: 1000px;
+      width: 100%;
+      cursor: default;
+      animation: lb-pop 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+
+    .lightbox img {
+      display: block;
+      width: 100%;
+      max-height: 82vh;
+      object-fit: contain;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.7), 0 0 40px rgba(255, 45, 74, 0.25);
+    }
+
+    .lightbox-cap {
+      margin-top: 14px;
+      text-align: center;
+      color: #fff;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+    }
+
+    .lightbox-cap span {
+      display: block;
+      margin-top: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: -14px; right: -14px;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: #1a0f14;
+      color: #fff;
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: all 0.18s ease;
+    }
+
+    .lightbox-close:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: scale(1.08);
+    }
+
+    @keyframes lb-pop {
+      from { transform: scale(0.92); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+
+    @media (max-width: 768px) {
+      .lightbox { padding: 18px; }
+      .lightbox-close { top: 4px; right: 4px; }
+    }
   </style>
 </head>
 
@@ -642,6 +725,15 @@
 
     <div class="scroll-hint">SCROLL · 滑鼠滾輪 或 ← →</div>
 
+  </div>
+
+  <!-- ─── 圖片放大 Lightbox ─── -->
+  <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-label="放大圖片">
+    <div class="lightbox-inner">
+      <button class="lightbox-close" id="lightboxClose" aria-label="關閉">×</button>
+      <img id="lightboxImg" src="" alt="" />
+      <div class="lightbox-cap" id="lightboxCap"></div>
+    </div>
   </div>
 
   <script>
@@ -757,11 +849,46 @@
         }
       });
 
+      var lb = document.getElementById('lightbox');
+      var lbImg = document.getElementById('lightboxImg');
+      var lbCap = document.getElementById('lightboxCap');
+      var lbClose = document.getElementById('lightboxClose');
+
+      function openLightbox(card) {
+        var img = card.querySelector('img');
+        if (!img) return;
+        lbImg.src = img.src;
+        lbImg.alt = img.alt || '';
+        var t = card.querySelector('.cf-title');
+        var s = card.querySelector('.cf-sub');
+        lbCap.innerHTML =
+          (t ? t.textContent : '') +
+          (s ? '<span>' + s.textContent + '</span>' : '');
+        lb.classList.add('open');
+        lb.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLightbox() {
+        lb.classList.remove('open');
+        lb.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+
       cards.forEach(function (card, i) {
         card.addEventListener('click', function () {
           targetPos = i;
           ensureAnimating();
+          openLightbox(card);
         });
+      });
+
+      lb.addEventListener('click', function (e) {
+        if (e.target !== lbImg) closeLightbox();
+      });
+      lbClose.addEventListener('click', closeLightbox);
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeLightbox();
       });
 
       var touchStartX = 0;
