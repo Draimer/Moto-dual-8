@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Moto Duel - 雙滑鼠摩托車對戰</title>
+  <title>MotoDuel - 雙滑鼠摩托車對戰</title>
   <meta name="description" content="一台電腦、兩顆滑鼠、兩個人現場 PK 的摩托車競速遊戲。滑鼠會跟著車身傾斜與震動。" />
   <link rel="icon" href="../icon.ico" />
+
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     * { margin: 0; }
@@ -25,6 +26,7 @@
       --green: #31d76b;
       --green-deep: #0fa44f;
       --max: 1180px;
+      --download-url: "https://github.com/Draimer/Moto-dual-8/releases/latest/download/MotoDuel-Setup.exe";
     }
 
     html { scroll-behavior: smooth; }
@@ -100,6 +102,7 @@
       box-shadow: 0 18px 55px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
+      text-decoration: none;
     }
 
     .brand img {
@@ -117,7 +120,7 @@
       text-transform: uppercase;
     }
 
-    .brand span {
+    .brand span span {
       display: block;
       margin-top: 3px;
       color: var(--yellow);
@@ -167,11 +170,7 @@
       gap: 56px;
     }
 
-    .hero-inner > *,
-    .section-head > *,
-    .demo-inner > * {
-      min-width: 0;
-    }
+    .hero-inner > *, .section-head > *, .demo-inner > * { min-width: 0; }
 
     .eyebrow {
       display: inline-flex;
@@ -297,6 +296,19 @@
       font-weight: 800;
     }
 
+    .release-fallback {
+      margin-top: 10px;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.58);
+      font-size: 12px;
+    }
+
+    .release-fallback a {
+      color: rgba(255, 234, 102, 0.95);
+      text-decoration: none;
+      font-weight: 800;
+    }
+
     .stats {
       position: relative;
       z-index: 2;
@@ -375,9 +387,7 @@
       gap: 16px;
     }
 
-    .feature-card,
-    .control-card,
-    .requirement-card {
+    .feature-card, .control-card, .requirement-card {
       border: 1px solid var(--line);
       border-radius: 10px;
       background:
@@ -540,8 +550,7 @@
       animation-delay: -0.45s;
     }
 
-    .mini-bike::before,
-    .mini-bike::after {
+    .mini-bike::before, .mini-bike::after {
       content: "";
       position: absolute;
       bottom: -12px;
@@ -589,8 +598,8 @@
       animation: mouse-tilt 0.72s ease-in-out infinite;
     }
 
-    .mouse.left { left: 6%; }
-    .mouse.right { right: 6%; animation-delay: -0.36s; }
+    .mouse.left { left: 6%; color: var(--orange); }
+    .mouse.right { right: 6%; color: var(--cyan); animation-delay: -0.36s; }
 
     .mouse::before {
       content: "";
@@ -617,18 +626,13 @@
       box-shadow: 0 0 22px currentColor;
     }
 
-    .mouse.left { color: var(--orange); }
-    .mouse.right { color: var(--cyan); }
-
     .controls-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 18px;
     }
 
-    .control-card {
-      padding: 28px;
-    }
+    .control-card { padding: 28px; }
 
     .control-card h3 {
       display: flex;
@@ -680,9 +684,7 @@
       gap: 14px;
     }
 
-    .requirement-card {
-      padding: 20px;
-    }
+    .requirement-card { padding: 20px; }
 
     .requirement-card span {
       display: block;
@@ -705,10 +707,7 @@
       border-top: 1px solid rgba(255, 255, 255, 0.07);
     }
 
-    .bottom-cta h2 {
-      max-width: 760px;
-      margin: 0 auto;
-    }
+    .bottom-cta h2 { max-width: 760px; margin: 0 auto; }
 
     .bottom-cta p {
       max-width: 640px;
@@ -785,59 +784,32 @@
       .stat:nth-child(2n) { border-right: 0; }
       .stat:nth-last-child(-n + 2) { border-bottom: 0; }
 
-      section,
-      .demo-inner {
-        width: min(100% - 32px, var(--max));
-      }
-
+      section, .demo-inner { width: min(100% - 32px, var(--max)); }
       section { padding: 78px 0; }
-      .section-head,
-      .demo-inner {
-        grid-template-columns: 1fr;
-        gap: 26px;
-      }
-
-      .feature-grid,
-      .requirements,
-      .controls-grid {
-        grid-template-columns: 1fr;
-      }
-
+      .section-head, .demo-inner { grid-template-columns: 1fr; gap: 26px; }
+      .feature-grid, .requirements, .controls-grid { grid-template-columns: 1fr; }
       .demo-section { padding: 78px 0; }
       .rig { min-height: 380px; }
       .mouse { width: 128px; height: 82px; }
     }
 
     @media (max-width: 520px) {
-      .nav,
-      .hero-inner,
-      .stats,
-      section,
-      .demo-inner {
+      .nav, .hero-inner, .stats, section, .demo-inner {
         width: calc(100vw - 32px);
         max-width: calc(100vw - 32px);
       }
 
       h1 { font-size: clamp(54px, 18vw, 78px); }
       .hero-lead { font-size: 16px; }
-      .brand {
-        width: 100%;
-        padding-right: 10px;
-      }
+      .brand { width: 100%; padding-right: 10px; }
       .brand img { width: 42px; height: 42px; }
       .brand strong { font-size: 13px; }
-      .brand span { font-size: 9px; }
+      .brand span span { font-size: 9px; }
       .nav-links { display: none; }
-      .cta-panel {
-        width: 100%;
-        max-width: 100%;
-      }
-      .download-btn {
-        width: 100%;
-      }
+      .cta-panel { width: 100%; max-width: 100%; }
+      .download-btn { width: 100%; }
       .stats { grid-template-columns: 1fr; }
-      .stat,
-      .stat:nth-child(2n) { border-right: 0; border-bottom: 1px solid var(--line); }
+      .stat, .stat:nth-child(2n) { border-right: 0; border-bottom: 1px solid var(--line); }
       .stat:last-child { border-bottom: 0; }
       .monitor { inset: 0 0 126px; }
       .mouse.left { left: 0; }
@@ -845,6 +817,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="page-shell">
     <header class="hero">
@@ -881,12 +854,26 @@
         </div>
 
         <aside class="cta-panel" aria-label="下載 MotoDuel">
-          <a href="#" class="download-btn" id="download-btn" download>免費下載</a>
+          <!-- 重點：下載網址直接寫在 href，不再靠 JavaScript 後面補 href="#" -->
+          <a
+            class="download-btn"
+            id="download-btn"
+            href="https://github.com/Draimer/Moto-dual-8/releases/latest/download/MotoDuel-Setup.exe"
+            rel="noopener"
+          >免費下載</a>
+
           <div class="download-meta">
-            <strong>MotoDuel Setup.exe</strong>
-            Windows 10/11 · 64-bit · 約 230 MB
+            <strong>MotoDuel-Setup.exe</strong>
+            Windows 10/11 · 64-bit · 約 160 MB
           </div>
+
           <a href="#demo" class="secondary-btn">觀看雙滑鼠 Demo</a>
+
+          <div class="release-fallback">
+            如果直接下載失敗，請到
+            <a href="https://github.com/Draimer/Moto-dual-8/releases/latest" target="_blank" rel="noopener">GitHub Release</a>
+            手動下載 Assets 裡的 MotoDuel-Setup.exe
+          </div>
         </aside>
       </div>
     </header>
@@ -1028,7 +1015,16 @@
     <section class="bottom-cta">
       <h2>準備把滑鼠變成摩托車把手了嗎？</h2>
       <p>免費下載、開箱即玩。找一位對手，接上第二顆滑鼠，直接開始 MotoDuel。</p>
-      <a href="#" class="download-btn" id="download-btn-2" download>免費下載</a>
+      <a
+        class="download-btn"
+        id="download-btn-2"
+        href="https://github.com/Draimer/Moto-dual-8/releases/latest/download/MotoDuel-Setup.exe"
+        rel="noopener"
+      >免費下載</a>
+      <div class="release-fallback">
+        備用下載頁：
+        <a href="https://github.com/Draimer/Moto-dual-8/releases/latest" target="_blank" rel="noopener">GitHub Release</a>
+      </div>
     </section>
 
     <footer>
@@ -1036,11 +1032,13 @@
     </footer>
   </div>
 
-  <script>
-    const DOWNLOAD_URL = "https://github.com/Draimer/Moto-dual-8/releases/latest/download/MotoDuel-Setup";
-    for (const btn of document.querySelectorAll("#download-btn, #download-btn-2")) {
-      btn.href = DOWNLOAD_URL;
-    }
-  </script>
+  <noscript>
+    <p style="padding: 24px; background: #111827; color: #fff; text-align: center;">
+      直接下載 MotoDuel：
+      <a style="color: #ffea66;" href="https://github.com/Draimer/Moto-dual-8/releases/latest/download/MotoDuel-Setup.exe">
+        MotoDuel-Setup.exe
+      </a>
+    </p>
+  </noscript>
 </body>
 </html>
