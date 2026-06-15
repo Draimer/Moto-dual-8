@@ -522,6 +522,30 @@
 
     .shot figcaption strong { display: block; font-size: 14px; font-weight: 800; color: #fff; margin-bottom: 2px; }
 
+    /* ───── 介紹影片 ───── */
+    .video-frame {
+      position: relative;
+      width: 100%;
+      max-width: 960px;
+      margin: 0 auto;
+      aspect-ratio: 16 / 9;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 45, 74, 0.3);
+      background: #000;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6), 0 0 50px rgba(255, 45, 74, 0.22);
+    }
+
+    .video-frame video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #000;
+      display: block;
+    }
+
     /* 下載 CTA */
     .download-cta {
       width: min(1180px, calc(100% - 48px));
@@ -803,8 +827,22 @@
 
   </div>
 
+  <!-- ─── 介紹影片 ─── -->
+  <section class="section" id="video">
+    <div class="section-head">
+      <span class="kicker">Watch</span>
+      <h2>實際運作影片</h2>
+      <p>看雙人壓車對戰與實體摩托車模型同步傾倒的真實畫面。</p>
+    </div>
+    <div class="video-frame">
+      <video src="video.mp4" controls preload="metadata" playsinline poster="screenshot-1.jpg">
+        您的瀏覽器不支援影片播放,<a href="video.mp4">點此下載影片</a>。
+      </video>
+    </div>
+  </section>
+
   <!-- ─── 玩法 ─── -->
-  <section class="section" id="how">
+  <section class="section" id="how" style="padding-top: 0;">
     <div class="section-head">
       <span class="kicker">How it works</span>
       <h2>三步開戰</h2>
